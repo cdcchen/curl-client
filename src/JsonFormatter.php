@@ -1,0 +1,27 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: chendong
+ * Date: 16/4/11
+ * Time: 15:43
+ */
+
+namespace cdcchen\curl;
+
+
+class JsonFormatter implements FormatterInterface
+{
+    /**
+     * @var integer the encoding options.For more details please refer to
+     * <http://www.php.net/manual/en/function.json-encode.php>.
+     */
+    public $encodeOptions = 0;
+
+    public function format(HttpRequest $request)
+    {
+        $request->addHeader('Content-Type', 'application/json; charset=UTF-8');
+        $request->setContent(json_encode($request->getData(), $this->encodeOptions));
+
+        return $request;
+    }
+}

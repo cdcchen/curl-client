@@ -1,0 +1,36 @@
+{
+    "name": "cdcchen/curl-client",
+    "description": "curl oop",
+    "version": "1.0.0",
+    "keywords": ["curl, http client"],
+    "type": "php-lib",
+    "homepage": "https://github.com/cdcchen/php-plus",
+    "time": "2015-05-25 17:45:01",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/cdcchen/php-plus/issues",
+        "wiki": "https://github.com/cdcchen/php-plus/wiki",
+        "source": "https://github.com/cdcchen/php-plus"
+    },
+    "authors": [
+        {
+            "name": "Dong Chen",
+            "email": "cdcchen@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.4.0",
+        "ext-curl": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "cdcchen\\curl\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+          "dev-master": "1.0.x-dev"
+        }
+    }
+}
