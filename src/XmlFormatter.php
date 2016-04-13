@@ -6,7 +6,7 @@
  * Time: 17:48
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 
 use DOMDocument;

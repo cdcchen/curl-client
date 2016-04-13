@@ -6,7 +6,7 @@
  * Time: 下午5:58
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 
 class Request
@@ -194,7 +194,8 @@ class Request
     }
 
     /**
-     * @param $content
+     * @param string $content
+     * @param array $headers
      * @return Response
      */
     protected static function createResponse($content, $headers)

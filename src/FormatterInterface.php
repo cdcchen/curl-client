@@ -6,7 +6,7 @@
  * Time: 15:43
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 
 interface FormatterInterface

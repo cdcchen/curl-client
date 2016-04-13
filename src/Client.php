@@ -6,7 +6,7 @@
  * Time: 下午5:58
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 
 class Client

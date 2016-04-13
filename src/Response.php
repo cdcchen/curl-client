@@ -6,7 +6,7 @@
  * Time: 03:14
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 
 class Response

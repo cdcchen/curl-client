@@ -6,7 +6,7 @@
  * Time: 17:58
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 
 interface ParserInterface

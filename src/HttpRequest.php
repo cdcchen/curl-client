@@ -6,7 +6,7 @@
  * Time: 03:52
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 use InvalidArgumentException;
 use CURLFile;

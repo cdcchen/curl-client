@@ -6,7 +6,7 @@
  * Time: 17:59
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 
 class XmlParser implements ParserInterface

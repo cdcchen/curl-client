@@ -6,7 +6,7 @@
  * Time: 18:00
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 
 class JsonParser implements ParserInterface

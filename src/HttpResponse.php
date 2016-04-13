@@ -6,7 +6,7 @@
  * Time: 04:41
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 
 class HttpResponse extends Response

@@ -6,7 +6,7 @@
  * Time: 05:17
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 
 interface RequestInterface

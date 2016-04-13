@@ -6,7 +6,7 @@
  * Time: 18:44
  */
 
-namespace cdcchen\curl;
+namespace cdcchen\net\curl;
 
 
 class UrlEncodedParser implements ParserInterface
