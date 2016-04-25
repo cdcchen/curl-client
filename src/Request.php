@@ -9,6 +9,10 @@
 namespace cdcchen\net\curl;
 
 
+/**
+ * Class Request
+ * @package cdcchen\net\curl
+ */
 class Request
 {
     /**
@@ -16,6 +20,9 @@ class Request
      */
     public $debug = false;
 
+    /**
+     * @var array
+     */
     protected static $defaultOptions = [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_CONNECTTIMEOUT => 10,
@@ -24,7 +31,13 @@ class Request
         CURLOPT_FORBID_REUSE => true,
     ];
 
+    /**
+     * @var array
+     */
     private $_options = [];
+    /**
+     * @var string
+     */
     private $_url;
 
     /**
@@ -33,33 +46,57 @@ class Request
     private $_transferInfo;
 
 
+    /**
+     * Request constructor.
+     * @param array $options
+     */
     public function __construct($options = [])
     {
         $this->addDefaultOptions()->addOptions($options);
     }
 
+    /**
+     * @param bool $value
+     * @return static
+     */
     public function setDebug($value = false)
     {
         $this->debug = (bool)$value;
         return $this->addOption(CURLOPT_VERBOSE, $this->debug);
     }
 
+    /**
+     * @param array $options
+     * @return static
+     */
     public function setOptions(array $options)
     {
         return $this->clearOptions()->addOptions($options);
     }
 
+    /**
+     * @return static
+     */
     private function addDefaultOptions()
     {
         return $this->addOptions(static::$defaultOptions);
     }
 
+    /**
+     * @param $option
+     * @param $value
+     * @return static
+     */
     public function addOption($option, $value)
     {
         $this->_options[$option] = $value;
         return $this;
     }
 
+    /**
+     * @param array $options
+     * @return static
+     */
     public function addOptions(array $options)
     {
         foreach ($options as $option => $value) {
@@ -69,11 +106,18 @@ class Request
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getOptions()
     {
         return $this->_options;
     }
 
+    /**
+     * @param $options
+     * @return static
+     */
     public function removeOptions($options)
     {
         $options = (array)$options;
@@ -84,6 +128,10 @@ class Request
         return $this;
     }
 
+    /**
+     * @param bool $setDefaultOptions
+     * @return static
+     */
     public function resetOptions($setDefaultOptions = true)
     {
         $this->clearOptions();
@@ -94,23 +142,37 @@ class Request
         return $this;
     }
 
+    /**
+     * @return static
+     */
     public function clearOptions()
     {
         $this->_options = [];
         return $this;
     }
 
+    /**
+     * @param $url
+     * @return static
+     */
     public function setUrl($url)
     {
         $this->_url = $url;
         return $this->addOption(CURLOPT_URL, $url);
     }
 
+    /**
+     * @return mixed
+     */
     public function getUrl()
     {
         return $this->_url;
     }
 
+    /**
+     * @param array $options
+     * @param bool $append
+     */
     public static function setDefaultOptions(array $options, $append = false)
     {
         if ($append) {
@@ -122,11 +184,20 @@ class Request
         }
     }
 
+    /**
+     * @param null $option
+     * @return array|mixed
+     */
     public static function getDefaultOptions($option = null)
     {
         return ($option === null) ? static::$defaultOptions : static::$defaultOptions[$option];
     }
 
+    /**
+     * @param array $options
+     * @param array $options1
+     * @return array
+     */
     public static function mergeOptions(array $options, array $options1)
     {
         foreach ($options1 as $index => $value) {
@@ -136,6 +207,10 @@ class Request
         return $options;
     }
 
+    /**
+     * @return bool|Response
+     * @throws \Exception
+     */
     public function send()
     {
         $handle = curl_init();
@@ -165,23 +240,42 @@ class Request
         return static::createResponse($content, $headers);
     }
 
+    /**
+     * prepare request params
+     */
     public function prepare()
     {
     }
 
+    /**
+     * @param array $requests
+     */
     public function batchExecute(array $requests)
     {
     }
 
+    /**
+     * @param Request $request
+     * @param resource $handle
+     * @return bool
+     */
     protected function beforeRequest(Request $request, $handle)
     {
         return true;
     }
 
+    /**
+     * @param Request $request
+     * @param resource $handle
+     */
     protected function afterRequest(Request $request, $handle)
     {
     }
 
+    /**
+     * @param Request $request
+     * @param array $output
+     */
     private function setHeaderOutput(Request $request, array &$output)
     {
         $request->addOption(CURLOPT_HEADERFUNCTION, function ($handle, $headerString) use (&$output) {
@@ -203,6 +297,10 @@ class Request
         return (new Response())->setContent($content)->setHeaders($headers);
     }
 
+    /**
+     * @param null $opt
+     * @return array|mixed
+     */
     public function getTransferInfo($opt = null)
     {
         return $opt === null ? $this->_transferInfo : $this->_transferInfo[$opt];

@@ -9,8 +9,16 @@
 namespace cdcchen\net\curl;
 
 
+/**
+ * Class XmlParser
+ * @package cdcchen\net\curl
+ */
 class XmlParser implements ParserInterface
 {
+    /**
+     * @param Response $response
+     * @return array
+     */
     public function parse(Response $response)
     {
         return $this->convertXmlToArray($response->getContent());

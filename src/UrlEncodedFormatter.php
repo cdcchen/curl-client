@@ -9,6 +9,10 @@
 namespace cdcchen\net\curl;
 
 
+/**
+ * Class UrlEncodedFormatter
+ * @package cdcchen\net\curl
+ */
 class UrlEncodedFormatter implements FormatterInterface
 {
     /**

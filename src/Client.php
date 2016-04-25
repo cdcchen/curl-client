@@ -9,38 +9,92 @@
 namespace cdcchen\net\curl;
 
 
+/**
+ * Class Client
+ * @package cdcchen\net\curl
+ */
 class Client
 {
+    /**
+     * @param string $url
+     * @param null|array $data
+     * @param array $headers
+     * @param array $options
+     * @return HttpRequest
+     */
     public static function get($url, $data = null, $headers = [], $options = [])
     {
         return static::createHttpRequestShortcut('get', $url, $data, $headers, $options);
     }
 
+    /**
+     * @param string $url
+     * @param null|array $data
+     * @param array $headers
+     * @param array $options
+     * @return HttpRequest
+     */
     public static function post($url, $data = null, $headers = [], $options = [])
     {
         return static::createHttpRequestShortcut('post', $url, $data, $headers, $options);
     }
 
+    /**
+     * @param string $url
+     * @param null|array $data
+     * @param array $headers
+     * @param array $options
+     * @return HttpRequest
+     */
     public static function put($url, $data = null, $headers = [], $options = [])
     {
         return static::createHttpRequestShortcut('put', $url, $data, $headers, $options);
     }
 
+    /**
+     * @param string $url
+     * @param null|array $data
+     * @param array $headers
+     * @param array $options
+     * @return HttpRequest
+     */
     public static function head($url, $data = null, $headers = [], $options = [])
     {
         return static::createHttpRequestShortcut('head', $url, $data, $headers, $options);
     }
 
+    /**
+     * @param string $url
+     * @param null|array $data
+     * @param array $headers
+     * @param array $options
+     * @return HttpRequest
+     */
     public static function patch($url, $data = null, $headers = [], $options = [])
     {
         return static::createHttpRequestShortcut('patch', $url, $data, $headers, $options);
     }
 
+    /**
+     * @param string $url
+     * @param null|array $data
+     * @param array $headers
+     * @param array $options
+     * @return HttpRequest
+     */
     public static function options($url, $data = null, $headers = [], $options = [])
     {
         return static::createHttpRequestShortcut('options', $url, $data, $headers, $options);
     }
 
+    /**
+     * @param string $url
+     * @param null|array $data
+     * @param array $files
+     * @param array $headers
+     * @param array $options
+     * @return HttpRequest
+     */
     public static function upload($url, $files = [], $data = null, $headers = [], $options = [])
     {
         $request = static::createHttpRequestShortcut('post', $url, $data, $headers, $options);
@@ -51,6 +105,14 @@ class Client
         return $request;
     }
 
+    /**
+     * @param string $method
+     * @param string $url
+     * @param null|array $data
+     * @param array $headers
+     * @param array $options
+     * @return HttpRequest
+     */
     private static function createHttpRequestShortcut($method, $url, $data, $headers, $options)
     {
         /* @var HttpRequest $request */

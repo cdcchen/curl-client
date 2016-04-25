@@ -9,6 +9,10 @@
 namespace cdcchen\net\curl;
 
 
+/**
+ * Class UrlEncodedParser
+ * @package cdcchen\net\curl
+ */
 class UrlEncodedParser implements ParserInterface
 {
     /**

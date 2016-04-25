@@ -9,6 +9,10 @@
 namespace cdcchen\net\curl;
 
 
+/**
+ * Class JsonFormatter
+ * @package cdcchen\net\curl
+ */
 class JsonFormatter implements FormatterInterface
 {
     /**
@@ -17,6 +21,10 @@ class JsonFormatter implements FormatterInterface
      */
     public $encodeOptions = 0;
 
+    /**
+     * @param HttpRequest $request
+     * @return HttpRequest
+     */
     public function format(HttpRequest $request)
     {
         $request->addHeader('Content-Type', 'application/json; charset=UTF-8');

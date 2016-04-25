@@ -14,6 +14,10 @@ use DOMElement;
 use DOMText;
 use SimpleXMLElement;
 
+/**
+ * Class XmlFormatter
+ * @package cdcchen\net\curl
+ */
 class XmlFormatter implements FormatterInterface
 {
     /**
@@ -33,6 +37,9 @@ class XmlFormatter implements FormatterInterface
      */
     public $rootTag = 'request';
 
+    /**
+     * @var string
+     */
     public $itemTag = 'item';
 
     /**
@@ -100,6 +107,10 @@ class XmlFormatter implements FormatterInterface
         }
     }
 
+    /**
+     * @param string $path
+     * @return string
+     */
     private static function pathBasename($path)
     {
         $path = rtrim(str_replace('\\', '/', $path), '/\\');

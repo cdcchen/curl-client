@@ -13,6 +13,10 @@ use CURLFile;
 
 require_once __DIR__ . '/http_build_url.php';
 
+/**
+ * Class HttpRequest
+ * @package cdcchen\net\curl
+ */
 class HttpRequest extends Request
 {
     /**
@@ -34,15 +38,39 @@ class HttpRequest extends Request
      */
     const FORMAT_XML = 'xml';
 
+    /**
+     * @var array
+     */
     private $_headers = [];
+    /**
+     * @var array
+     */
     private $_cookies = [];
-    private $_files   = [];
+    /**
+     * @var array
+     */
+    private $_files  = [];
+    /**
+     * @var string
+     */
     private $_content;
+    /**
+     * @var array|mixed
+     */
     private $_data;
-    private $_format  = self::FORMAT_URLENCODED;
-    private $_method  = 'get';
+    /**
+     * @var string
+     */
+    private $_format = self::FORMAT_URLENCODED;
+    /**
+     * @var string
+     */
+    private $_method = 'get';
 
 
+    /**
+     * prepare http request
+     */
     public function prepare()
     {
         $this->setHeaders()
@@ -51,6 +79,9 @@ class HttpRequest extends Request
              ->setPostFields();
     }
 
+    /**
+     * @return static
+     */
     private function setHttpMethod()
     {
         $method = strtoupper($this->getMethod());
@@ -68,6 +99,9 @@ class HttpRequest extends Request
     }
 
 
+    /**
+     * @return static
+     */
     private function setPostFields()
     {
         $data = $this->getData();
@@ -92,7 +126,7 @@ class HttpRequest extends Request
 
     /**
      * @param string $method request method
-     * @return $this self reference.
+     * @return static self reference.
      */
     public function setMethod($method)
     {
@@ -108,34 +142,55 @@ class HttpRequest extends Request
         return $this->_method;
     }
 
+    /**
+     * @param $content
+     * @return static
+     */
     public function setContent($content)
     {
         $this->_content = $content;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getContent()
     {
         return $this->_content;
     }
 
+    /**
+     * @param array $data
+     * @return static
+     */
     public function setData(array $data)
     {
         $this->_data = $data;
         return $this;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function getData()
     {
         return $this->_data;
     }
 
+    /**
+     * @param $format
+     * @return static
+     */
     public function setFormat($format)
     {
         $this->_format = $format;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getFormat()
     {
         if ($this->_format === null) {
@@ -145,6 +200,9 @@ class HttpRequest extends Request
         return $this->_format;
     }
 
+    /**
+     * @return string
+     */
     public function defaultFormat()
     {
         return self::FORMAT_URLENCODED;
@@ -191,6 +249,13 @@ class HttpRequest extends Request
         return $formatter;
     }
 
+    /**
+     * @param $input_name
+     * @param array $files
+     * @param null $mime_type
+     * @param null $post_name
+     * @return static
+     */
     public function addFiles($input_name, array $files, $mime_type = null, $post_name = null)
     {
         foreach ($files as $index => $file) {
@@ -201,6 +266,13 @@ class HttpRequest extends Request
         return $this;
     }
 
+    /**
+     * @param $input_name
+     * @param $file
+     * @param null $mime_type
+     * @param null $post_name
+     * @return static
+     */
     public function addFile($input_name, $file, $mime_type = null, $post_name = null)
     {
         if ($file instanceof CURLFile) {
@@ -212,18 +284,30 @@ class HttpRequest extends Request
         return $this;
     }
 
+    /**
+     * @return static
+     */
     public function clearFiles()
     {
         $this->_files = [];
         return $this;
     }
 
+    /**
+     * @param $name
+     * @param $value
+     * @return static
+     */
     public function addHeader($name, $value)
     {
         $this->_headers[$name] = $value;
         return $this;
     }
 
+    /**
+     * @param $headers
+     * @return static
+     */
     public function addHeaders($headers)
     {
         $headers = (array)$headers;
@@ -239,6 +323,9 @@ class HttpRequest extends Request
         return $this;
     }
 
+    /**
+     * @return static
+     */
     private function setHeaders()
     {
         $headers = [];
@@ -249,11 +336,18 @@ class HttpRequest extends Request
         return $this->addOption(CURLOPT_HTTPHEADER, $headers);
     }
 
+    /**
+     * @return array
+     */
     public function getHeaders()
     {
         return $this->_headers;
     }
 
+    /**
+     * @param bool $referrer
+     * @return static
+     */
     public function setReferrer($referrer = true)
     {
 
@@ -266,6 +360,11 @@ class HttpRequest extends Request
         return $this;
     }
 
+    /**
+     * @param $username
+     * @param $password
+     * @return static
+     */
     public function setBasicAuth($username, $password)
     {
         if (!empty($username)) {
@@ -278,12 +377,21 @@ class HttpRequest extends Request
         }
     }
 
+    /**
+     * @param $username
+     * @param $password
+     * @return static
+     */
     public function setUserPassword($username, $password)
     {
         return $this->addOption(CURLOPT_USERPWD, "{$username}:{$password}");
     }
 
 
+    /**
+     * @param $agent
+     * @return static
+     */
     public function setUserAgent($agent)
     {
         if ($agent) {
@@ -293,18 +401,31 @@ class HttpRequest extends Request
         return $this;
     }
 
+    /**
+     * @param bool $value
+     * @return static
+     */
     public function setEnableSessionCookie($value = false)
     {
         return $this->addOption(CURLOPT_COOKIESESSION, (bool)$value);
     }
 
 
+    /**
+     * @param $name
+     * @param $value
+     * @return static
+     */
     public function addCookie($name, $value)
     {
         $this->_cookies[$name] = $value;
         return $this;
     }
 
+    /**
+     * @param $cookies
+     * @return static
+     */
     public function addCookies($cookies)
     {
         $cookies = (array)$cookies;
@@ -320,6 +441,9 @@ class HttpRequest extends Request
         return $this;
     }
 
+    /**
+     * @return static
+     */
     private function setCookies()
     {
         $cookies = [];
@@ -330,6 +454,11 @@ class HttpRequest extends Request
         return $this->addOption(CURLOPT_COOKIE, $cookies);
     }
 
+    /**
+     * @param $file
+     * @param null $jar
+     * @return static
+     */
     public function setCookieFile($file, $jar = null)
     {
         if ($file && is_writable($file) && is_readable($file)) {
@@ -342,6 +471,11 @@ class HttpRequest extends Request
         }
     }
 
+    /**
+     * @param bool $value
+     * @param int $maxRedirects
+     * @return static
+     */
     public function setFollowLocation($value = true, $maxRedirects = 5)
     {
         return $this->addOptions([
@@ -351,6 +485,11 @@ class HttpRequest extends Request
         ]);
     }
 
+    /**
+     * @param bool $value
+     * @param bool $safe
+     * @return static
+     */
     public function setAllowUpload($value = true, $safe = true)
     {
         return $this->addOptions([
@@ -359,21 +498,40 @@ class HttpRequest extends Request
         ]);
     }
 
+    /**
+     * @param $version
+     * @return static
+     */
     public function setVersion($version)
     {
         return $this->addOption(CURLOPT_HTTP_VERSION, $version);
     }
 
+    /**
+     * @param $value
+     * @param bool $ms
+     * @return static
+     */
     public function setTimeout($value, $ms = true)
     {
         return $this->addOption($ms ? CURLOPT_TIMEOUT_MS : CURLOPT_TIMEOUT, $value);
     }
 
+    /**
+     * @param $value
+     * @return static
+     */
     public function setEncoding($value)
     {
         return $this->addOption(CURLOPT_ENCODING, $value);
     }
 
+    /**
+     * @param bool $peer
+     * @param int $host
+     * @param array $extraOptions
+     * @return static
+     */
     public function setSSL($peer = false, $host = 2, array $extraOptions = [])
     {
         return $this->addOptions([CURLOPT_SSL_VERIFYPEER => $peer, CURLOPT_SSL_VERIFYHOST => $host])
@@ -381,6 +539,11 @@ class HttpRequest extends Request
     }
 
 
+    /**
+     * @param $url
+     * @param $params
+     * @return mixed
+     */
     public static function buildUrl($url, $params)
     {
         if (empty($params)) {
