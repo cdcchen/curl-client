@@ -135,10 +135,10 @@ class HttpResponse extends Response
     private function getParser()
     {
         static $defaultParsers = [
-            HttpRequest::FORMAT_JSON => 'cdcchen\curl\JsonParser',
-            HttpRequest::FORMAT_URLENCODED => 'cdcchen\curl\UrlEncodedParser',
-            HttpRequest::FORMAT_RAW_URLENCODED => 'cdcchen\curl\UrlEncodedParser',
-            HttpRequest::FORMAT_XML => 'cdcchen\curl\XmlParser',
+            HttpRequest::FORMAT_JSON => 'cdcchen\net\curl\JsonParser',
+            HttpRequest::FORMAT_URLENCODED => 'cdcchen\net\curl\UrlEncodedParser',
+            HttpRequest::FORMAT_RAW_URLENCODED => 'cdcchen\net\curl\UrlEncodedParser',
+            HttpRequest::FORMAT_XML => 'cdcchen\net\curl\XmlParser',
         ];
 
         if (!isset($defaultParsers[$this->getFormat()])) {

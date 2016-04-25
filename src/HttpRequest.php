@@ -159,16 +159,16 @@ class HttpRequest extends Request
     public function getFormatter()
     {
         static $defaultFormatters = [
-            self::FORMAT_JSON => 'cdcchen\curl\JsonFormatter',
+            self::FORMAT_JSON => 'cdcchen\net\curl\JsonFormatter',
             self::FORMAT_URLENCODED => [
-                'class' => 'cdcchen\curl\UrlEncodedFormatter',
+                'class' => 'cdcchen\net\curl\UrlEncodedFormatter',
                 'encodingType' => PHP_QUERY_RFC1738
             ],
             self::FORMAT_RAW_URLENCODED => [
-                'class' => 'cdcchen\curl\UrlEncodedFormatter',
+                'class' => 'cdcchen\net\curl\UrlEncodedFormatter',
                 'encodingType' => PHP_QUERY_RFC3986
             ],
-            self::FORMAT_XML => 'cdcchen\curl\XmlFormatter',
+            self::FORMAT_XML => 'cdcchen\net\curl\XmlFormatter',
         ];
 
         if (!isset($defaultFormatters[$this->getFormat()])) {
