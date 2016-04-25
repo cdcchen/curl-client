@@ -159,7 +159,7 @@ class Request
         curl_close($handle);
 
         if ($errorNumber !== CURLE_OK) {
-            throw new \Exception('Curl error: #' . $errorNumber . ' - ' . $errorMessage);
+            throw new \Exception('Curl error: #' . $errorNumber . ' - ' . $errorMessage, $errorNumber);
         }
 
         return static::createResponse($content, $headers);

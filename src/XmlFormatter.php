@@ -33,6 +33,8 @@ class XmlFormatter implements FormatterInterface
      */
     public $rootTag = 'request';
 
+    public $itemTag = 'item';
+
     /**
      * @inheritdoc
      */
