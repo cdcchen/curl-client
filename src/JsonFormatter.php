@@ -19,7 +19,7 @@ class JsonFormatter implements FormatterInterface
      * @var integer the encoding options.For more details please refer to
      * <http://www.php.net/manual/en/function.json-encode.php>.
      */
-    public $encodeOptions = 0;
+    public $encodeOptions = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 
     /**
      * @param HttpRequest $request
