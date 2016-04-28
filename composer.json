@@ -1,12 +1,10 @@
 {
     "name": "cdcchen/curl-client",
     "description": "curl oop",
-    "version": "1.0.0",
     "keywords": ["http", "httpclient", "curl", "curlclient", "phphttp"],
-    "type": "php-lib",
     "homepage": "https://github.com/cdcchen/php-plus",
     "time": "2016-04-13 22:05:01",
-    "license": "BSD-3-Clause",
+    "license": "BSD-4-Clause",
     "support": {
         "issues": "https://github.com/cdcchen/curl-client/issues",
         "wiki": "https://github.com/cdcchen/curl-client/wiki",
