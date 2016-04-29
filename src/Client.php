@@ -13,6 +13,10 @@ namespace cdcchen\net\curl;
  * Class Client
  * @package cdcchen\net\curl
  */
+/**
+ * Class Client
+ * @package cdcchen\net\curl
+ */
 class Client
 {
     /**
@@ -85,6 +89,18 @@ class Client
     public static function options($url, $data = null, $headers = [], $options = [])
     {
         return static::createHttpRequestShortcut('options', $url, $data, $headers, $options);
+    }
+
+    /**
+     * @param string $url
+     * @param null|array $data
+     * @param array $headers
+     * @param array $options
+     * @return HttpRequest
+     */
+    public function delete($url, $data = null, $headers = [], $options = [])
+    {
+        return static::createHttpRequestShortcut('delete', $url, $data, $headers, $options);
     }
 
     /**
