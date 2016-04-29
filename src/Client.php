@@ -99,7 +99,7 @@ class Client
      * @param array $options
      * @return HttpRequest
      */
-    public function delete($url, $data = null, $headers = [], $options = [])
+    public static function delete($url, $data = null, $headers = [], $options = [])
     {
         return static::createHttpRequestShortcut('delete', $url, $data, $headers, $options);
     }
