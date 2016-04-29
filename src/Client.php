@@ -9,10 +9,10 @@
 namespace cdcchen\net\curl;
 
 
-/**
- * Class Client
- * @package cdcchen\net\curl
- */
+    /**
+     * Class Client
+     * @package cdcchen\net\curl
+     */
 /**
  * Class Client
  * @package cdcchen\net\curl
@@ -64,7 +64,8 @@ class Client
      */
     public static function head($url, $data = null, $headers = [], $options = [])
     {
-        return static::createHttpRequestShortcut('head', $url, $data, $headers, $options);
+        return static::createHttpRequestShortcut('head', $url, $data, $headers, $options)
+                     ->addOption(CURLOPT_NOBODY, true);
     }
 
     /**
