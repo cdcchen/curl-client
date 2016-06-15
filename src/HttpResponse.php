@@ -105,26 +105,27 @@ class HttpResponse extends Response
     {
         $_headers = [];
         foreach ((array)$headers as $name => $value) {
-            if (is_int($name)) {
-                // parse raw header :
-                $rawHeader = $value;
-                if (($separatorPos = strpos($rawHeader, ':')) !== false) {
-                    $name = strtolower(trim(substr($rawHeader, 0, $separatorPos)));
-                    $value = trim(substr($rawHeader, $separatorPos + 1));
-                    if (isset($_headers[$name])) {
-                        $_headers[$name] = (array)$_headers[$name];
-                        array_push($_headers[$name], $value);
-                    } else {
-                        $_headers[$name] = $value;
-                    }
-                } elseif (strpos($rawHeader, 'HTTP/') === 0) {
-                    $parts = explode(' ', $rawHeader, 3);
-                    $_headers['http-code'] = $parts[1];
-                } else {
-                    $_headers['raw'] = $rawHeader;
-                }
-            } else {
+            if (!is_int($name)) {
                 $_headers[$name] = $value;
+                continue;
+            }
+
+            // parse raw header :
+            $rawHeader = $value;
+            if (($separatorPos = strpos($rawHeader, ':')) !== false) {
+                $name = strtolower(trim(substr($rawHeader, 0, $separatorPos)));
+                $value = trim(substr($rawHeader, $separatorPos + 1));
+                if (isset($_headers[$name])) {
+                    $_headers[$name] = (array)$_headers[$name];
+                    array_push($_headers[$name], $value);
+                } else {
+                    $_headers[$name] = $value;
+                }
+            } elseif (strpos($rawHeader, 'HTTP/') === 0) {
+                $parts = explode(' ', $rawHeader, 3);
+                $_headers['http-code'] = $parts[1];
+            } else {
+                $_headers['raw'] = $rawHeader;
             }
         }
         return $_headers;
@@ -136,6 +137,15 @@ class HttpResponse extends Response
     public function isOK()
     {
         return $this->getHeader('http-code') == 200;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuccess()
+    {
+        $status = $this->getHeader('http-code');
+        return $status >= 200 && $status < 300;
     }
 
     /**
