@@ -9,6 +9,10 @@
 namespace cdcchen\net\curl;
 
 
+/**
+ * Interface FormatterInterface
+ * @package cdcchen\net\curl
+ */
 interface FormatterInterface
 {
     /**

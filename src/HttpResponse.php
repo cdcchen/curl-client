@@ -9,6 +9,10 @@
 namespace cdcchen\net\curl;
 
 
+/**
+ * Class HttpResponse
+ * @package cdcchen\net\curl
+ */
 class HttpResponse extends Response
 {
     /**
@@ -32,7 +36,10 @@ class HttpResponse extends Response
     private $_format;
 
 
-
+    /**
+     * @param mixed $data
+     * @return $this
+     */
     public function setData($data)
     {
         $this->_data = $data;
@@ -54,27 +61,46 @@ class HttpResponse extends Response
         return $this->_data;
     }
 
+    /**
+     * @param array $headers
+     * @return $this
+     */
     public function setHeaders($headers)
     {
         $this->_headers = $this->parseHeaders($headers);
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getHeaders()
     {
         return $this->_headers;
     }
 
+    /**
+     * @param string $name
+     * @return bool|mixed
+     */
     public function getHeader($name)
     {
         return isset($this->_headers[$name]) ? $this->_headers[$name] : false;
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function hasHeader($name)
     {
         return isset($this->_headers[$name]);
     }
 
+    /**
+     * @param array $headers
+     * @return array
+     */
     public function parseHeaders($headers)
     {
         $_headers = [];
@@ -102,6 +128,14 @@ class HttpResponse extends Response
             }
         }
         return $_headers;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOK()
+    {
+        return $this->getHeader('http-code') == 200;
     }
 
     /**

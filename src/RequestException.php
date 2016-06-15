@@ -9,6 +9,10 @@
 namespace cdcchen\net\curl;
 
 
+/**
+ * Class RequestException
+ * @package cdcchen\net\curl
+ */
 class RequestException extends \Exception
 {
 

@@ -9,6 +9,10 @@
 namespace cdcchen\net\curl;
 
 
+/**
+ * Interface ParserInterface
+ * @package cdcchen\net\curl
+ */
 interface ParserInterface
 {
     /**

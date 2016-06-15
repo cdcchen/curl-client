@@ -7,7 +7,8 @@
  */
 
 if (!function_exists('http_build_url')) {
-    define('HTTP_URL_REPLACE', 1);              // Replace every part of the first URL when there's one of the second URL
+    define('HTTP_URL_REPLACE',
+        1);              // Replace every part of the first URL when there's one of the second URL
     define('HTTP_URL_JOIN_PATH', 2);            // Join relative paths
     define('HTTP_URL_JOIN_QUERY', 4);           // Join query strings
     define('HTTP_URL_STRIP_USER', 8);           // Strip any user authentication information

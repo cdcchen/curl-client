@@ -87,7 +87,7 @@ class XmlFormatter implements FormatterInterface
             }
 
             $this->buildXml($child, $array);
-            
+
         } elseif (is_array($data)) {
             foreach ($data as $name => $value) {
                 if (is_int($name) && is_object($value)) {

@@ -9,6 +9,10 @@
 namespace cdcchen\net\curl;
 
 
+/**
+ * Class JsonParser
+ * @package cdcchen\net\curl
+ */
 class JsonParser implements ParserInterface
 {
     /**
