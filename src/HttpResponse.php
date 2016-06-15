@@ -16,6 +16,11 @@ namespace cdcchen\net\curl;
 class HttpResponse extends Response
 {
     /**
+     *
+     */
+    const STATUS_HEADER_NAME = 'http-code';
+
+    /**
      * @var array headers.
      */
     private $_headers = [];
@@ -85,7 +90,7 @@ class HttpResponse extends Response
      */
     public function getHeader($name)
     {
-        return isset($this->_headers[$name]) ? $this->_headers[$name] : false;
+        return isset($this->_headers[$name]) ? $this->_headers[$name] : null;
     }
 
     /**
@@ -123,7 +128,7 @@ class HttpResponse extends Response
                 }
             } elseif (strpos($rawHeader, 'HTTP/') === 0) {
                 $parts = explode(' ', $rawHeader, 3);
-                $_headers['http-code'] = $parts[1];
+                $_headers[self::STATUS_HEADER_NAME] = $parts[1];
             } else {
                 $_headers['raw'] = $rawHeader;
             }
@@ -136,7 +141,7 @@ class HttpResponse extends Response
      */
     public function isOK()
     {
-        return $this->getHeader('http-code') == 200;
+        return $this->getHeader(self::STATUS_HEADER_NAME) == 200;
     }
 
     /**
@@ -144,8 +149,16 @@ class HttpResponse extends Response
      */
     public function isSuccess()
     {
-        $status = $this->getHeader('http-code');
+        $status = $this->getHeader(self::STATUS_HEADER_NAME);
         return $status >= 200 && $status < 300;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getStatus()
+    {
+        return $this->getHeader(self::STATUS_HEADER_NAME);
     }
 
     /**
