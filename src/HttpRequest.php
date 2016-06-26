@@ -75,8 +75,14 @@ class HttpRequest extends Request
     {
         $this->setHeaders()
              ->setCookies()
-             ->setHttpMethod()
-             ->setPostFields();
+             ->setHttpMethod();
+
+        $method = strtoupper($this->getMethod());
+        if (in_array($method, ['GET', 'HEAD', 'OPTIONS'])) {
+            $this->addOption(CURLOPT_NOBODY, true);
+        } else {
+            $this->setPostData();
+        }
     }
 
     /**
@@ -86,8 +92,6 @@ class HttpRequest extends Request
     {
         $method = strtoupper($this->getMethod());
         switch ($method) {
-            case 'GET':
-                break;
             case 'POST':
                 $this->addOption(CURLOPT_POST, true);
                 break;
@@ -102,8 +106,16 @@ class HttpRequest extends Request
     /**
      * @return static
      */
-    private function setPostFields()
+    private function setPostData()
     {
+        $content = $this->getContent();
+        if ($content !== null) {
+            $this->addOption(CURLOPT_POSTFIELDS, $content)
+                 ->addHeader('Content-Length', strlen($content));
+
+            return $this;
+        }
+
         $data = $this->getData();
         if ($this->_files) {
             $data = $data ? array_merge($data, $this->_files) : $this->_files;
@@ -112,12 +124,6 @@ class HttpRequest extends Request
 
         if ($data) {
             $this->getFormatter()->format($this);
-        }
-
-        $content = $this->getContent();
-        if ($content !== null) {
-            $this->addOption(CURLOPT_POSTFIELDS, $content)
-                 ->addHeader('Content-Length', strlen($content));
         }
 
         return $this;
