@@ -8,8 +8,8 @@
 
 namespace cdcchen\net\curl;
 
-use InvalidArgumentException;
 use CURLFile;
+use InvalidArgumentException;
 
 require_once __DIR__ . '/http_build_url.php';
 
@@ -49,7 +49,7 @@ class HttpRequest extends Request
     /**
      * @var array
      */
-    private $_files  = [];
+    private $_files = [];
     /**
      * @var string
      */
@@ -143,7 +143,7 @@ class HttpRequest extends Request
     }
 
     /**
-     * @param $content
+     * @param string $content
      * @return static
      */
     public function setContent($content)
@@ -179,7 +179,7 @@ class HttpRequest extends Request
     }
 
     /**
-     * @param $format
+     * @param string $format
      * @return static
      */
     public function setFormat($format)
@@ -250,10 +250,10 @@ class HttpRequest extends Request
     }
 
     /**
-     * @param $input_name
-     * @param array $files
-     * @param null $mime_type
-     * @param null $post_name
+     * @param string $input_name
+     * @param array|CURLFile[] $files
+     * @param null|string $mime_type
+     * @param null|string $post_name
      * @return static
      */
     public function addFiles($input_name, array $files, $mime_type = null, $post_name = null)
@@ -267,10 +267,10 @@ class HttpRequest extends Request
     }
 
     /**
-     * @param $input_name
-     * @param $file
-     * @param null $mime_type
-     * @param null $post_name
+     * @param string $input_name
+     * @param string|CURLFile $file
+     * @param null|string $mime_type
+     * @param null|string $post_name
      * @return static
      */
     public function addFile($input_name, $file, $mime_type = null, $post_name = null)
@@ -294,8 +294,8 @@ class HttpRequest extends Request
     }
 
     /**
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param mixed $value
      * @return static
      */
     public function addHeader($name, $value)
@@ -305,7 +305,7 @@ class HttpRequest extends Request
     }
 
     /**
-     * @param $headers
+     * @param array $headers
      * @return static
      */
     public function addHeaders($headers)
@@ -320,6 +320,37 @@ class HttpRequest extends Request
             $this->addHeader($name, $value);
         }
 
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function hasHeader($name)
+    {
+        return isset($this->_headers[$name]);
+    }
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function removeHeader($name)
+    {
+        if ($this->hasHeader($name)) {
+            unset($this->_headers[$name]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function clearHeaders()
+    {
+        $this->_headers = [];
         return $this;
     }
 
@@ -361,8 +392,8 @@ class HttpRequest extends Request
     }
 
     /**
-     * @param $username
-     * @param $password
+     * @param string $username
+     * @param string $password
      * @return static
      */
     public function setBasicAuth($username, $password)
@@ -378,8 +409,8 @@ class HttpRequest extends Request
     }
 
     /**
-     * @param $username
-     * @param $password
+     * @param string $username
+     * @param string $password
      * @return static
      */
     public function setUserPassword($username, $password)
@@ -389,7 +420,7 @@ class HttpRequest extends Request
 
 
     /**
-     * @param $agent
+     * @param string $agent
      * @return static
      */
     public function setUserAgent($agent)
@@ -412,8 +443,8 @@ class HttpRequest extends Request
 
 
     /**
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param string $value
      * @return static
      */
     public function addCookie($name, $value)
@@ -423,7 +454,7 @@ class HttpRequest extends Request
     }
 
     /**
-     * @param $cookies
+     * @param array $cookies
      * @return static
      */
     public function addCookies($cookies)
@@ -455,8 +486,8 @@ class HttpRequest extends Request
     }
 
     /**
-     * @param $file
-     * @param null $jar
+     * @param string $file
+     * @param null|string $jar
      * @return static
      */
     public function setCookieFile($file, $jar = null)
@@ -499,29 +530,59 @@ class HttpRequest extends Request
     }
 
     /**
-     * @param $version
+     * @param string $version
      * @return static
+     * @deprecated
      */
     public function setVersion($version)
+    {
+        return $this->setHttpVersion($version);
+    }
+
+    /**
+     * @param string $version
+     * @return static
+     */
+    public function setHttpVersion($version)
     {
         return $this->addOption(CURLOPT_HTTP_VERSION, $version);
     }
 
     /**
-     * @param $value
+     * @param int $value
      * @param bool $ms
      * @return static
      */
-    public function setTimeout($value, $ms = true)
+    public function setConnectTimeout($value, $ms = false)
+    {
+        return $this->addOption($ms ? CURLOPT_CONNECTTIMEOUT_MS : CURLOPT_CONNECTTIMEOUT, $value);
+    }
+
+    /**
+     * @param int $value
+     * @param bool $ms
+     * @return static
+     */
+    public function setTimeout($value, $ms = false)
     {
         return $this->addOption($ms ? CURLOPT_TIMEOUT_MS : CURLOPT_TIMEOUT, $value);
     }
 
     /**
-     * @param $value
+     * @param string $value
      * @return static
+     * @deprecated
      */
     public function setEncoding($value)
+    {
+        return $this->setAcceptEncoding($value);
+    }
+
+    /**
+     * @param string $value
+     * @return static
+     */
+    public function setAcceptEncoding($value)
     {
         return $this->addOption(CURLOPT_ENCODING, $value);
     }

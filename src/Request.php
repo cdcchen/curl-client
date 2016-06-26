@@ -13,7 +13,7 @@ namespace cdcchen\net\curl;
  * Class Request
  * @package cdcchen\net\curl
  */
-class Request
+class Request extends Object
 {
     /**
      * @var bool
@@ -83,8 +83,8 @@ class Request
     }
 
     /**
-     * @param $option
-     * @param $value
+     * @param string $option
+     * @param mixed $value
      * @return static
      */
     public function addOption($option, $value)
@@ -115,7 +115,7 @@ class Request
     }
 
     /**
-     * @param $options
+     * @param string|array $options
      * @return static
      */
     public function removeOptions($options)
@@ -152,7 +152,7 @@ class Request
     }
 
     /**
-     * @param $url
+     * @param string $url
      * @return static
      */
     public function setUrl($url)
@@ -162,7 +162,7 @@ class Request
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getUrl()
     {
@@ -185,7 +185,7 @@ class Request
     }
 
     /**
-     * @param null $option
+     * @param null|string $option
      * @return array|mixed
      */
     public static function getDefaultOptions($option = null)
@@ -208,7 +208,7 @@ class Request
     }
 
     /**
-     * @return bool|Response
+     * @return bool|Response|HttpResponse
      * @throws \Exception
      */
     public function send()
@@ -256,7 +256,7 @@ class Request
 
     /**
      * @param Request $request
-     * @param resource $handle
+     * @param resource $handle curl_init resource
      * @return bool
      */
     protected function beforeRequest(Request $request, $handle)
@@ -298,7 +298,7 @@ class Request
     }
 
     /**
-     * @param null $opt
+     * @param null|string $opt
      * @return array|mixed
      */
     public function getTransferInfo($opt = null)

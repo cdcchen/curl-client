@@ -13,7 +13,7 @@ namespace cdcchen\net\curl;
  * Class Response
  * @package cdcchen\net\curl
  */
-class Response
+class Response extends Object
 {
     /**
      * @var string|null raw content

@@ -17,9 +17,11 @@ namespace cdcchen\net\curl;
  * Class Client
  * @package cdcchen\net\curl
  */
-class Client
+class Client extends Object
 {
     /**
+     * Http GET method request shortcut
+     *
      * @param string $url
      * @param null|array $data
      * @param array $headers
@@ -32,6 +34,8 @@ class Client
     }
 
     /**
+     * Http POST method request shortcut
+     *
      * @param string $url
      * @param null|array $data
      * @param array $headers
@@ -44,6 +48,8 @@ class Client
     }
 
     /**
+     * Http PUT method request shortcut
+     *
      * @param string $url
      * @param null|array $data
      * @param array $headers
@@ -56,19 +62,23 @@ class Client
     }
 
     /**
+     * Http GET method request shortcut
+     *
      * @param string $url
      * @param null|array $data
      * @param array $headers
      * @param array $options
      * @return HttpRequest
      */
-    public static function head($url, $data = null, $headers = [], $options = [])
+    public static function HEAD($url, $data = null, $headers = [], $options = [])
     {
         return static::createHttpRequestShortcut('head', $url, $data, $headers, $options)
                      ->addOption(CURLOPT_NOBODY, true);
     }
 
     /**
+     * Http PATCH method request shortcut
+     *
      * @param string $url
      * @param null|array $data
      * @param array $headers
@@ -81,6 +91,8 @@ class Client
     }
 
     /**
+     * Http OPTIONS method request shortcut
+     *
      * @param string $url
      * @param null|array $data
      * @param array $headers
@@ -93,6 +105,8 @@ class Client
     }
 
     /**
+     * Http DELETE method request shortcut
+     *
      * @param string $url
      * @param null|array $data
      * @param array $headers
@@ -105,6 +119,8 @@ class Client
     }
 
     /**
+     * Http upload request shortcut
+     *
      * @param string $url
      * @param null|array $data
      * @param array $files
