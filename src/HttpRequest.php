@@ -75,14 +75,9 @@ class HttpRequest extends Request
     {
         $this->setHeaders()
              ->setCookies()
-             ->setHttpMethod();
+             ->setHttpMethod()
+             ->setPostData();
 
-        $method = strtoupper($this->getMethod());
-        if (in_array($method, ['GET', 'HEAD', 'OPTIONS'])) {
-            $this->addOption(CURLOPT_NOBODY, true);
-        } else {
-            $this->setPostData();
-        }
     }
 
     /**
@@ -90,7 +85,7 @@ class HttpRequest extends Request
      */
     private function setHttpMethod()
     {
-        $method = strtoupper($this->getMethod());
+        $method = $this->getMethod();
         switch ($method) {
             case 'POST':
                 $this->addOption(CURLOPT_POST, true);
@@ -108,14 +103,6 @@ class HttpRequest extends Request
      */
     private function setPostData()
     {
-        $content = $this->getContent();
-        if ($content !== null) {
-            $this->addOption(CURLOPT_POSTFIELDS, $content)
-                 ->addHeader('Content-Length', strlen($content));
-
-            return $this;
-        }
-
         $data = $this->getData();
         if ($this->_files) {
             $data = $data ? array_merge($data, $this->_files) : $this->_files;
@@ -124,6 +111,17 @@ class HttpRequest extends Request
 
         if ($data) {
             $this->getFormatter()->format($this);
+        }
+
+        $content = $this->getContent();
+        if ($content !== null) {
+            $method = $this->getMethod();
+            if (in_array($method, ['GET', 'HEAD', 'OPTIONS'])) {
+                $this->addOption(CURLOPT_NOBODY, true);
+            } else {
+                $this->addOption(CURLOPT_POSTFIELDS, $content)
+                     ->addHeader('Content-Length', strlen($content));
+            }
         }
 
         return $this;
@@ -145,7 +143,7 @@ class HttpRequest extends Request
      */
     public function getMethod()
     {
-        return $this->_method;
+        return strtoupper($this->_method);
     }
 
     /**
