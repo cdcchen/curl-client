@@ -70,7 +70,7 @@ class Client extends Object
      * @param array $options
      * @return HttpRequest
      */
-    public static function HEAD($url, $data = null, $headers = [], $options = [])
+    public static function head($url, $data = null, $headers = [], $options = [])
     {
         return static::createHttpRequestShortcut('head', $url, $data, $headers, $options)
                      ->addOption(CURLOPT_NOBODY, true);

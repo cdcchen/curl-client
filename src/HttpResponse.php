@@ -314,6 +314,7 @@ class HttpResponse extends Response
         static $nameMap = [
             'expires' => 'expire',
             'httponly' => 'httpOnly',
+            'max-age' => 'maxAge',
         ];
         $name = strtolower($rawName);
         if (isset($nameMap[$name])) {
