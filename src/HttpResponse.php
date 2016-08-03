@@ -109,7 +109,8 @@ class HttpResponse extends Response
     public function parseHeaders($headers)
     {
         $_headers = [];
-        foreach ((array)$headers as $name => $value) {
+        $headers = array_unique((array)$headers);
+        foreach ($headers as $name => $value) {
             if (!is_int($name)) {
                 $_headers[$name] = $value;
                 continue;

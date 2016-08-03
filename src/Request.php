@@ -279,7 +279,7 @@ class Request extends Object
     private function setHeaderOutput(Request $request, array &$output)
     {
         $request->addOption(CURLOPT_HEADERFUNCTION, function ($handle, $headerString) use (&$output) {
-            $header = trim($headerString, "\n\r");
+            $header = trim($headerString, "\r\n");
             if (strlen($header) > 0) {
                 $output[] = $header;
             }
