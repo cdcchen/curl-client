@@ -486,7 +486,7 @@ class HttpRequest extends Request
             $cookies[] = $name . '=' . $value;
         }
 
-        return $this->addOption(CURLOPT_COOKIE, $cookies);
+        return $this->addOption(CURLOPT_COOKIE, join('; ', $cookies));
     }
 
     /**
