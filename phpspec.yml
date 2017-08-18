@@ -1,0 +1,6 @@
+bootstrap: spec/bootstrap.php
+suites:
+    curl_suite:
+        namespace: cdcchen\net\curl
+        psr4_prefix: cdcchen\net\curl
+
