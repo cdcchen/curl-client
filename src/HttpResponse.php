@@ -8,6 +8,8 @@
 
 namespace cdcchen\net\curl;
 
+use cdcchen\psr7\Response;
+
 
 /**
  * Class HttpResponse
@@ -19,11 +21,6 @@ class HttpResponse extends Response
      *
      */
     const STATUS_HEADER_NAME = 'http-code';
-
-    /**
-     * @var array headers.
-     */
-    private $_headers = [];
 
     /**
      * @var array cookies.
@@ -57,7 +54,7 @@ class HttpResponse extends Response
     public function getData()
     {
         if ($this->_data === null) {
-            $content = $this->getContent();
+            $content = $this->getBody()->getContents();
             if (!empty($content)) {
                 $data = $this->getParser()->parse($this);
                 $this->setData($data);
@@ -67,82 +64,11 @@ class HttpResponse extends Response
     }
 
     /**
-     * @param array $headers
-     * @return $this
-     */
-    public function setHeaders($headers)
-    {
-        $this->_headers = $this->parseHeaders($headers);
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getHeaders()
-    {
-        return $this->_headers;
-    }
-
-    /**
-     * @param string $name
-     * @return bool|mixed
-     */
-    public function getHeader($name)
-    {
-        return isset($this->_headers[$name]) ? $this->_headers[$name] : null;
-    }
-
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function hasHeader($name)
-    {
-        return isset($this->_headers[$name]);
-    }
-
-    /**
-     * @param array $headers
-     * @return array
-     */
-    public function parseHeaders($headers)
-    {
-        $_headers = [];
-        $headers = array_unique((array)$headers);
-        foreach ($headers as $name => $value) {
-            if (!is_int($name)) {
-                $_headers[$name] = $value;
-                continue;
-            }
-
-            // parse raw header :
-            $rawHeader = $value;
-            if (($separatorPos = strpos($rawHeader, ':')) !== false) {
-                $name = strtolower(trim(substr($rawHeader, 0, $separatorPos)));
-                $value = trim(substr($rawHeader, $separatorPos + 1));
-                if (isset($_headers[$name])) {
-                    $_headers[$name] = (array)$_headers[$name];
-                    array_push($_headers[$name], $value);
-                } else {
-                    $_headers[$name] = $value;
-                }
-            } elseif (strpos($rawHeader, 'HTTP/') === 0) {
-                $parts = explode(' ', $rawHeader, 3);
-                $_headers[self::STATUS_HEADER_NAME] = $parts[1];
-            } else {
-                $_headers['raw'] = $rawHeader;
-            }
-        }
-        return $_headers;
-    }
-
-    /**
      * @return bool
      */
     public function isOK()
     {
-        return $this->getHeader(self::STATUS_HEADER_NAME) == 200;
+        return $this->getStatusCode() == 200;
     }
 
     /**
@@ -150,16 +76,8 @@ class HttpResponse extends Response
      */
     public function isSuccess()
     {
-        $status = $this->getHeader(self::STATUS_HEADER_NAME);
+        $status = $this->getStatusCode();
         return $status >= 200 && $status < 300;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getStatus()
-    {
-        return $this->getHeader(self::STATUS_HEADER_NAME);
     }
 
     /**
@@ -193,10 +111,10 @@ class HttpResponse extends Response
     private function getParser()
     {
         static $defaultParsers = [
-            HttpRequest::FORMAT_JSON => 'cdcchen\net\curl\JsonParser',
-            HttpRequest::FORMAT_URLENCODED => 'cdcchen\net\curl\UrlEncodedParser',
-            HttpRequest::FORMAT_RAW_URLENCODED => 'cdcchen\net\curl\UrlEncodedParser',
-            HttpRequest::FORMAT_XML => 'cdcchen\net\curl\XmlParser',
+            Formatter::FORMAT_JSON => 'cdcchen\net\curl\JsonParser',
+            Formatter::FORMAT_URLENCODED => 'cdcchen\net\curl\UrlEncodedParser',
+            Formatter::FORMAT_RAW_URLENCODED => 'cdcchen\net\curl\UrlEncodedParser',
+            Formatter::FORMAT_XML => 'cdcchen\net\curl\XmlParser',
         ];
 
         if (!isset($defaultParsers[$this->getFormat()])) {
@@ -219,7 +137,7 @@ class HttpResponse extends Response
     {
         $format = $this->detectFormatByHeaders($this->getHeaders());
         if ($format === null) {
-            $format = $this->detectFormatByContent($this->getContent());
+            $format = $this->detectFormatByContent($this->getBody()->getContents());
         }
         return $format;
     }
@@ -234,13 +152,13 @@ class HttpResponse extends Response
         $contentType = $headers['content-type'];
         if (!empty($contentType)) {
             if (stripos($contentType, 'json') !== false) {
-                return HttpRequest::FORMAT_JSON;
+                return Formatter::FORMAT_JSON;
             }
             if (stripos($contentType, 'urlencoded') !== false) {
-                return HttpRequest::FORMAT_URLENCODED;
+                return Formatter::FORMAT_URLENCODED;
             }
             if (stripos($contentType, 'xml') !== false) {
-                return HttpRequest::FORMAT_XML;
+                return Formatter::FORMAT_XML;
             }
         }
         return null;
@@ -254,13 +172,13 @@ class HttpResponse extends Response
     protected function detectFormatByContent($content)
     {
         if (preg_match('/^\\{.*\\}$/is', $content)) {
-            return HttpRequest::FORMAT_JSON;
+            return Formatter::FORMAT_JSON;
         }
         if (preg_match('/^[^=|^&]+=[^=|^&]+(&[^=|^&]+=[^=|^&]+)*$/', $content)) {
-            return HttpRequest::FORMAT_URLENCODED;
+            return Formatter::FORMAT_URLENCODED;
         }
         if (preg_match('/^<.*>$/s', $content)) {
-            return HttpRequest::FORMAT_XML;
+            return Formatter::FORMAT_XML;
         }
         return null;
     }

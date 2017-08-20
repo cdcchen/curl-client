@@ -13,7 +13,7 @@ namespace cdcchen\net\curl;
  * Class Request
  * @package cdcchen\net\curl
  */
-class Request extends Object
+class CurlClient
 {
     /**
      * @var bool
@@ -50,7 +50,7 @@ class Request extends Object
      * Request constructor.
      * @param array $options
      */
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
         $this->addDefaultOptions()->addOptions($options);
     }
@@ -59,7 +59,7 @@ class Request extends Object
      * @param bool $value
      * @return static
      */
-    public function setDebug($value = false)
+    public function setDebug(bool $value = false): self
     {
         $this->debug = (bool)$value;
         return $this->addOption(CURLOPT_VERBOSE, $this->debug);
@@ -69,7 +69,7 @@ class Request extends Object
      * @param array $options
      * @return static
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): self
     {
         return $this->clearOptions()->addOptions($options);
     }
@@ -77,17 +77,17 @@ class Request extends Object
     /**
      * @return static
      */
-    private function addDefaultOptions()
+    private function addDefaultOptions(): self
     {
         return $this->addOptions(static::$defaultOptions);
     }
 
     /**
-     * @param string $option
+     * @param int $option
      * @param mixed $value
      * @return static
      */
-    public function addOption($option, $value)
+    public function addOption(int $option, $value): self
     {
         $this->_options[$option] = $value;
         return $this;
@@ -97,7 +97,7 @@ class Request extends Object
      * @param array $options
      * @return static
      */
-    public function addOptions(array $options)
+    public function addOptions(array $options): self
     {
         foreach ($options as $option => $value) {
             $this->addOption($option, $value);
@@ -109,18 +109,27 @@ class Request extends Object
     /**
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->_options;
     }
 
     /**
-     * @param string|array $options
+     * @param int $option
      * @return static
      */
-    public function removeOptions($options)
+    public function removeOption(int $option): self
     {
-        $options = (array)$options;
+        unset($this->_options[$option]);
+        return $this;
+    }
+
+    /**
+     * @param array $options
+     * @return static
+     */
+    public function removeOptions(array $options): self
+    {
         foreach ($options as $option) {
             unset($this->_options[$option]);
         }
@@ -132,7 +141,7 @@ class Request extends Object
      * @param bool $setDefaultOptions
      * @return static
      */
-    public function resetOptions($setDefaultOptions = true)
+    public function resetOptions(bool $setDefaultOptions = true): self
     {
         $this->clearOptions();
         if ($setDefaultOptions) {
@@ -145,7 +154,7 @@ class Request extends Object
     /**
      * @return static
      */
-    public function clearOptions()
+    public function clearOptions(): self
     {
         $this->_options = [];
         return $this;
@@ -155,7 +164,7 @@ class Request extends Object
      * @param string $url
      * @return static
      */
-    public function setUrl($url)
+    public function setUrl(string $url): self
     {
         $this->_url = $url;
         return $this->addOption(CURLOPT_URL, $url);
@@ -164,18 +173,18 @@ class Request extends Object
     /**
      * @return string
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->_url;
     }
 
     /**
      * @param array $options
-     * @param bool $append
+     * @param bool $merge
      */
-    public static function setDefaultOptions(array $options, $append = false)
+    public static function setDefaultOptions(array $options, bool $merge = false): void
     {
-        if ($append) {
+        if ($merge) {
             foreach ($options as $option => $value) {
                 static::$defaultOptions[$option] = $value;
             }
@@ -185,12 +194,16 @@ class Request extends Object
     }
 
     /**
-     * @param null|string $option
-     * @return array|mixed
+     * @param null|int $option
+     * @return array|mixed|null
      */
-    public static function getDefaultOptions($option = null)
+    public static function getDefaultOptions(int $option = null)
     {
-        return ($option === null) ? static::$defaultOptions : static::$defaultOptions[$option];
+        if ($option === null) {
+            return static::$defaultOptions;
+        }
+
+        return static::$defaultOptions[$option] ?? null;
     }
 
     /**
@@ -198,7 +211,7 @@ class Request extends Object
      * @param array $options1
      * @return array
      */
-    public static function mergeOptions(array $options, array $options1)
+    public static function mergeOptions(array $options, array $options1): array
     {
         foreach ($options1 as $index => $value) {
             $options[$index] = $value;
@@ -208,11 +221,14 @@ class Request extends Object
     }
 
     /**
-     * @return bool|Response|HttpResponse
-     * @throws \Exception
+     * @return bool|string
+     * @throws RequestException
      */
     public function send()
     {
+//        curl_setopt($handle,CURLOPT_POSTFIELDS, $data);
+
+
         $handle = curl_init();
         if (!$this->beforeRequest($this, $handle)) {
             return false;
@@ -221,9 +237,8 @@ class Request extends Object
         $this->prepare();
         $this->addOption(CURLOPT_VERBOSE, $this->debug);
 
-        $headers = [];
-        $this->setHeaderOutput($this, $headers);
         curl_setopt_array($handle, $this->getOptions());
+
         $content = curl_exec($handle);
 
         // check cURL error
@@ -237,13 +252,13 @@ class Request extends Object
             throw new RequestException('Curl error: #' . $errorNumber . ' - ' . $errorMessage, $errorNumber);
         }
 
-        return static::createResponse($content, $headers);
+        return $content;
     }
 
     /**
      * prepare request params
      */
-    public function prepare()
+    protected function prepare(): void
     {
     }
 
@@ -255,54 +270,33 @@ class Request extends Object
     }
 
     /**
-     * @param Request $request
+     * @param CurlClient $client
      * @param resource $handle curl_init resource
      * @return bool
      */
-    protected function beforeRequest(Request $request, $handle)
+    protected function beforeRequest(CurlClient $client, $handle): bool
     {
         return true;
     }
 
     /**
-     * @param Request $request
+     * @param CurlClient $request
      * @param resource $handle
      */
-    protected function afterRequest(Request $request, $handle)
+    protected function afterRequest(CurlClient $request, $handle)
     {
     }
 
     /**
-     * @param Request $request
-     * @param array $output
-     */
-    private function setHeaderOutput(Request $request, array &$output)
-    {
-        $request->addOption(CURLOPT_HEADERFUNCTION, function ($handle, $headerString) use (&$output) {
-            $header = trim($headerString, "\r\n");
-            if (strlen($header) > 0) {
-                $output[] = $header;
-            }
-            return mb_strlen($headerString, '8bit');
-        });
-    }
-
-    /**
-     * @param string $content
-     * @param array $headers
-     * @return Response
-     */
-    protected static function createResponse($content, $headers)
-    {
-        return (new Response())->setContent($content)->setHeaders($headers);
-    }
-
-    /**
-     * @param null|string $opt
+     * @param null|string $option
      * @return array|mixed
      */
-    public function getTransferInfo($opt = null)
+    public function getTransferInfo($option = null)
     {
-        return $opt === null ? $this->_transferInfo : $this->_transferInfo[$opt];
+        if ($option === null) {
+            return $this->_transferInfo;
+        }
+
+        return $this->_transferInfo[$option] ?? null;
     }
 }

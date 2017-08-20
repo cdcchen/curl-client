@@ -8,6 +8,8 @@
 
 namespace cdcchen\net\curl;
 
+use Psr\Http\Message\RequestInterface;
+
 
 /**
  * Interface FormatterInterface
@@ -17,8 +19,9 @@ interface FormatterInterface
 {
     /**
      * Formats given HTTP request message.
-     * @param HttpRequest $request HTTP request instance.
-     * @return Request formatted request.
+     * @param HttpClient $client
+     * @param RequestInterface $request HTTP request instance
+     * @return RequestInterface
      */
-    public function format(HttpRequest $request);
+    public function format(HttpClient $client, RequestInterface $request): RequestInterface;
 }

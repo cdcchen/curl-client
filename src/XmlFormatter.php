@@ -9,9 +9,11 @@
 namespace cdcchen\net\curl;
 
 
+use cdcchen\psr7\StreamHelper;
 use DOMDocument;
 use DOMElement;
 use DOMText;
+use Psr\Http\Message\RequestInterface;
 use SimpleXMLElement;
 
 /**
@@ -45,15 +47,14 @@ class XmlFormatter implements FormatterInterface
     /**
      * @inheritdoc
      */
-    public function format(HttpRequest $request)
+    public function format(HttpClient $client, RequestInterface $request): RequestInterface
     {
         $contentType = $this->contentType;
         $charset = $this->encoding === 'utf-8';// ? Yii::$app->charset : $this->encoding;
         if (stripos($contentType, 'charset') === false) {
             $contentType .= '; charset=' . $charset;
         }
-        $request->addHeader('Content-Type', $contentType);
-        $data = $request->getData();
+        $data = $client->getData();
         if ($data !== null) {
             if ($data instanceof DOMDocument) {
                 $content = $data->saveXML();
@@ -66,8 +67,11 @@ class XmlFormatter implements FormatterInterface
                 $this->buildXml($root, $data);
                 $content = $dom->saveXML();
             }
-            $request->setContent($content);
+
+            return $request->withHeader('Content-Type', $contentType)
+                           ->withBody(StreamHelper::createStream($content));
         }
+
         return $request;
     }
 

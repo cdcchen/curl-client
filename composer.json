@@ -25,7 +25,8 @@
   "minimum-stability": "stable",
   "require": {
     "php": ">=7.1.0",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "cdcchen/psr7": "^1.0"
   },
   "require-dev": {
     "phpspec/phpspec": "^4.0"

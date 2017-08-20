@@ -8,6 +8,9 @@
 
 namespace cdcchen\net\curl;
 
+use cdcchen\psr7\StreamHelper;
+use Psr\Http\Message\RequestInterface;
+
 
 /**
  * Class UrlEncodedFormatter
@@ -29,21 +32,19 @@ class UrlEncodedFormatter implements FormatterInterface
     /**
      * @inheritdoc
      */
-    public function format(HttpRequest $request)
+    public function format(HttpClient $client, RequestInterface $request): RequestInterface
     {
-        $data = (array)$request->getData();
+        $data = (array)$client->getData();
         $content = http_build_query($data, '', '&', $this->encodingType);
         if (strcasecmp('get', $request->getMethod()) === 0) {
             if (!empty($content)) {
-                $url = $request->getUrl();
-                $url .= (strpos($url, '?') === false) ? '?' : '&';
-                $url .= $content;
-                $request->setUrl($url);
+                $uri = $request->getUri()->withQuery($content);
+                $request = $request->withUri($uri);
             }
             return $request;
         }
-        $request->addHeader('Content-Type', 'application/x-www-form-urlencoded');
-        $request->setContent($content);
-        return $request;
+
+        return $request->withHeader('Content-Type', 'application/x-www-form-urlencoded')
+                       ->withBody(StreamHelper::createStream($content));
     }
 }

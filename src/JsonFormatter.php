@@ -8,6 +8,9 @@
 
 namespace cdcchen\net\curl;
 
+use cdcchen\psr7\StreamHelper;
+use Psr\Http\Message\RequestInterface;
+
 
 /**
  * Class JsonFormatter
@@ -22,14 +25,13 @@ class JsonFormatter implements FormatterInterface
     public $encodeOptions = 320; // JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 
     /**
-     * @param HttpRequest $request
-     * @return HttpRequest
+     * @inheritdoc
      */
-    public function format(HttpRequest $request)
+    public function format(HttpClient $client, RequestInterface $request): RequestInterface
     {
-        $request->addHeader('Content-Type', 'application/json; charset=UTF-8');
-        $request->setContent(json_encode($request->getData(), $this->encodeOptions));
+        $stream = StreamHelper::createStream(json_encode($client->getData(), $this->encodeOptions));
 
-        return $request;
+        return $request->withHeader('Content-Type', 'application/json; charset=UTF-8')
+                       ->withBody($stream);
     }
 }
