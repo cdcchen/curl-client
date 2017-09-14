@@ -48,10 +48,12 @@ class HttpClient extends CurlClient
         $headers = new HeaderCollection();
         $this->setHeaderOutput($statusLine, $headers);
 
-        if (in_array($method, ['GET', 'HEAD', 'OPTIONS'])) {
+        if ($method === 'GET') {
+            $this->addOption(CURLOPT_NOBODY, false);
+        } elseif (in_array($method, ['HEAD', 'OPTIONS'])) {
             $this->addOption(CURLOPT_NOBODY, true);
         } elseif ($this->_files) {
-            $this->addOption(CURLOPT_POSTFIELDS, array_merge($this->_data, $this->_files));
+            $this->addOption(CURLOPT_POSTFIELDS, array_merge((array)$this->_data, $this->_files));
         } else {
             if ($this->_data) {
                 $request = Formatter::getFormatter($this->_format)->format($this, $request);
@@ -204,33 +206,36 @@ class HttpClient extends CurlClient
     /**
      * @param string $inputName
      * @param array|CURLFile[] $files
-     * @param null|string $mimeType
-     * @param null|string $postName
      * @return static
      */
-    public function addFiles($inputName, array $files, $mimeType = null, $postName = null): self
+    public function addFiles(string $inputName, array $files): self
     {
-        foreach ($files as $index => $file) {
-            $inputName = "{$inputName}[{$index}]";
-            $this->addFile($inputName, $file, $mimeType, $postName);
+        $count = count($files);
+        if ($count === 1) {
+            $this->addFile($inputName, current($files));
+        } elseif ($count > 1) {
+            foreach ($files as $index => $file) {
+                $this->addFile("{$inputName}[{$index}]", $file);
+            }
         }
+
         return $this;
     }
 
     /**
      * @param string $inputName
-     * @param string|CURLFile $file
-     * @param null|string $mimeType
-     * @param null|string $postName
+     * @param CURLFile $file
      * @return static
      */
-    public function addFile($inputName, $file, $mimeType = null, $postName = null): self
+    public function addFile(string $inputName, $file): self
     {
-        if ($file instanceof CURLFile) {
-            $this->_files[$inputName] = $file;
-        } else {
-            $this->_files[$inputName] = new CURLFile($file, $mimeType, $postName);
+        if (is_string($file)) {
+            $file = new CURLFile($file);
+        } elseif (!($file instanceof $file)) {
+            throw new \InvalidArgumentException('Argument $file is must be a valid filename or instance of CURLFile.');
         }
+
+        $this->_files[$inputName] = $file;
         return $this;
     }
 

@@ -29,7 +29,7 @@
     "cdcchen/psr7": "^1.0"
   },
   "require-dev": {
-    "phpspec/phpspec": "^4.0"
+    "phpunit/phpunit": "^6.3"
   },
   "config": {
     "bin-dir": "bin"

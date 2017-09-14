@@ -59,7 +59,7 @@ class CurlClient
      * @param bool $value
      * @return static
      */
-    public function setDebug(bool $value = false): self
+    public function setDebug(bool $value): self
     {
         $this->debug = (bool)$value;
         return $this->addOption(CURLOPT_VERBOSE, $this->debug);
@@ -226,9 +226,6 @@ class CurlClient
      */
     public function send()
     {
-//        curl_setopt($handle,CURLOPT_POSTFIELDS, $data);
-
-
         $handle = curl_init();
         if (!$this->beforeRequest($this, $handle)) {
             return false;

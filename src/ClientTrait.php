@@ -14,10 +14,9 @@ namespace cdcchen\net\curl;
  * @package cdcchen\net\curl
  */
 
+use cdcchen\psr7\HeaderCollection;
 use cdcchen\psr7\Request;
-use cdcchen\psr7\StreamHelper;
 use cdcchen\psr7\Uri;
-use Psr\Http\Message\StreamInterface;
 
 /**
  * Trait Client
@@ -50,7 +49,7 @@ trait ClientTrait
             $uri->withQuery($queryString);
         }
 
-        return static::request('get', $uri, null, $headers, $options);
+        return static::sendRequest('GET', $uri, null, $headers, $options);
     }
 
     /**
@@ -64,7 +63,7 @@ trait ClientTrait
      */
     public static function post(string $url, $data = null, array $headers = [], array $options = []): HttpResponse
     {
-        return static::request('post', $url, $data, $headers, $options);
+        return static::sendRequest('POST', $url, $data, $headers, $options);
     }
 
     /**
@@ -78,7 +77,7 @@ trait ClientTrait
      */
     public static function put(string $url, $data = null, array $headers = [], array $options = []): HttpResponse
     {
-        return static::request('put', $url, $data, $headers, $options);
+        return static::sendRequest('PUT', $url, $data, $headers, $options);
     }
 
     /**
@@ -92,7 +91,7 @@ trait ClientTrait
      */
     public static function head(string $url, $data = null, array $headers = [], array $options = []): HttpResponse
     {
-        return static::request('head', $url, $data, $headers, $options);
+        return static::sendRequest('HEAD', $url, $data, $headers, $options);
     }
 
     /**
@@ -106,7 +105,7 @@ trait ClientTrait
      */
     public static function patch(string $url, $data = null, array $headers = [], array $options = []): HttpResponse
     {
-        return static::request('patch', $url, $data, $headers, $options);
+        return static::sendRequest('PATCH', $url, $data, $headers, $options);
     }
 
     /**
@@ -120,7 +119,7 @@ trait ClientTrait
      */
     public static function options(string $url, $data = null, array $headers = [], array $options = []): HttpResponse
     {
-        return static::request('options', $url, $data, $headers, $options);
+        return static::sendRequest('OPTIONS', $url, $data, $headers, $options);
     }
 
     /**
@@ -134,7 +133,7 @@ trait ClientTrait
      */
     public static function delete(string $url, $data = null, array $headers = [], array $options = []): HttpResponse
     {
-        return static::request('delete', $url, $data, $headers, $options);
+        return static::sendRequest('DELETE', $url, $data, $headers, $options);
     }
 
     /**
@@ -142,11 +141,10 @@ trait ClientTrait
      *
      * @param string $url
      * @param null|array|string $data
-     * @param array $files
+     * @param array $files [inputName => file] or [inputName => [file1, file2]]
      * @param array $headers
      * @param array $options
      * @return HttpResponse
-     * @todo not completed
      */
     public static function upload(
         string $url,
@@ -155,7 +153,7 @@ trait ClientTrait
         array $headers = [],
         array $options = []
     ): HttpResponse {
-        return static::request('post', $url, $data, $headers, $options);
+        return static::sendRequest('POST', $url, $data, $headers, $options, $files);
     }
 
     /**
@@ -164,23 +162,29 @@ trait ClientTrait
      * @param null|string $body
      * @param array $headers
      * @param array $options
+     * @param \CURLFile[] $files [inputName => file] or [inputName => [file1, file2]]
      * @return HttpResponse
      */
-    private static function request(
+    private static function sendRequest(
         string $method,
         string $url,
-        string $body = null,
+        $body = null,
         array $headers,
-        array $options
+        array $options,
+        array $files = []
     ): HttpResponse {
-        $request = new Request($method, $url, $headers);
+        $request = new Request($method, $url, new HeaderCollection($headers));
         $client = (new HttpClient())->addOptions($options);
+        if ($body) {
+            $client->setData($body);
+        }
 
-        if ($body !== null) {
-            if (!($body instanceof StreamInterface)) {
-                $body = StreamHelper::createStream($body);
+        foreach ($files as $inputName => $file) {
+            if (is_array($file)) {
+                $client->addFiles($inputName, $file);
+            } else {
+                $client->addFile($inputName, $file);
             }
-            $request = $request->withBody($body);
         }
 
         return $client->request($request);
