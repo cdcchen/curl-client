@@ -8,6 +8,8 @@
 
 namespace cdcchen\net\curl;
 
+use cdcchen\psr7\Response;
+
 
 /**
  * Interface ParserInterface

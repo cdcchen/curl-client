@@ -16,6 +16,10 @@ namespace cdcchen\net\curl;
 class CurlClient
 {
     /**
+     * @var OptionCollection
+     */
+    public $options;
+    /**
      * @var bool
      */
     public $debug = false;
@@ -30,20 +34,15 @@ class CurlClient
         CURLOPT_DNS_USE_GLOBAL_CACHE => true,
         CURLOPT_FORBID_REUSE => true,
     ];
-
-    /**
-     * @var array
-     */
-    private $_options = [];
     /**
      * @var string
      */
-    private $_url;
+    private $url;
 
     /**
-     * @var array
+     * @var TransferInfo
      */
-    private $_transferInfo;
+    private $transferInfo;
 
 
     /**
@@ -52,6 +51,7 @@ class CurlClient
      */
     public function __construct(array $options = [])
     {
+        $this->options = new OptionCollection();
         $this->addDefaultOptions()->addOptions($options);
     }
 
@@ -89,7 +89,7 @@ class CurlClient
      */
     public function addOption(int $option, $value): self
     {
-        $this->_options[$option] = $value;
+        $this->options->set($option, $value);
         return $this;
     }
 
@@ -100,10 +100,28 @@ class CurlClient
     public function addOptions(array $options): self
     {
         foreach ($options as $option => $value) {
-            $this->addOption($option, $value);
+            $this->options->set($option, $value);
         }
 
         return $this;
+    }
+
+    /**
+     * @param int $option
+     * @return bool
+     */
+    public function hasOptions(int $option)
+    {
+        return $this->options->has($option);
+    }
+
+    /**
+     * @param int $option
+     * @return mixed
+     */
+    public function getOption(int $option)
+    {
+        return $this->options->get($option);
     }
 
     /**
@@ -111,7 +129,7 @@ class CurlClient
      */
     public function getOptions(): array
     {
-        return $this->_options;
+        return $this->options->toArray();
     }
 
     /**
@@ -120,7 +138,7 @@ class CurlClient
      */
     public function removeOption(int $option): self
     {
-        unset($this->_options[$option]);
+        $this->options->remove($option);
         return $this;
     }
 
@@ -131,7 +149,7 @@ class CurlClient
     public function removeOptions(array $options): self
     {
         foreach ($options as $option) {
-            unset($this->_options[$option]);
+            $this->options->remove($option);
         }
 
         return $this;
@@ -156,7 +174,7 @@ class CurlClient
      */
     public function clearOptions(): self
     {
-        $this->_options = [];
+        $this->options->removeAll();
         return $this;
     }
 
@@ -166,7 +184,7 @@ class CurlClient
      */
     public function setUrl(string $url): self
     {
-        $this->_url = $url;
+        $this->url = $url;
         return $this->addOption(CURLOPT_URL, $url);
     }
 
@@ -175,7 +193,7 @@ class CurlClient
      */
     public function getUrl(): string
     {
-        return $this->_url;
+        return $this->url;
     }
 
     /**
@@ -207,24 +225,11 @@ class CurlClient
     }
 
     /**
-     * @param array $options
-     * @param array $options1
-     * @return array
-     */
-    public static function mergeOptions(array $options, array $options1): array
-    {
-        foreach ($options1 as $index => $value) {
-            $options[$index] = $value;
-        }
-
-        return $options;
-    }
-
-    /**
+     * @param string|null $url
      * @return bool|string
      * @throws RequestException
      */
-    public function send()
+    public function send(string $url = null)
     {
         $handle = curl_init();
         if (!$this->beforeRequest($this, $handle)) {
@@ -234,6 +239,9 @@ class CurlClient
         $this->prepare();
         $this->addOption(CURLOPT_VERBOSE, $this->debug);
 
+        if ($url !== null) {
+            $this->setUrl($url);
+        }
         curl_setopt_array($handle, $this->getOptions());
 
         $content = curl_exec($handle);
@@ -241,7 +249,7 @@ class CurlClient
         // check cURL error
         $errorNumber = curl_errno($handle);
         $errorMessage = curl_error($handle);
-        $this->_transferInfo = curl_getinfo($handle);
+        $this->transferInfo = new TransferInfo($handle);
         $this->afterRequest($this, $handle);
         curl_close($handle);
 
@@ -271,7 +279,7 @@ class CurlClient
      * @param resource $handle curl_init resource
      * @return bool
      */
-    protected function beforeRequest(CurlClient $client, $handle): bool
+    protected function beforeRequest(self $client, $handle): bool
     {
         return true;
     }
@@ -280,20 +288,15 @@ class CurlClient
      * @param CurlClient $request
      * @param resource $handle
      */
-    protected function afterRequest(CurlClient $request, $handle)
+    protected function afterRequest(self $request, $handle)
     {
     }
 
     /**
-     * @param null|string $option
-     * @return array|mixed
+     * @return TransferInfo
      */
-    public function getTransferInfo($option = null)
+    public function getTransferInfo()
     {
-        if ($option === null) {
-            return $this->_transferInfo;
-        }
-
-        return $this->_transferInfo[$option] ?? null;
+        return $this->transferInfo;
     }
 }
