@@ -8,6 +8,8 @@
 
 namespace cdcchen\net\curl;
 
+use cdcchen\psr7\Response;
+
 
 /**
  * Class JsonParser
@@ -18,8 +20,8 @@ class JsonParser implements ParserInterface
     /**
      * @inheritdoc
      */
-    public function parse(Response $response)
+    public function parse(Response $response): array
     {
-        return json_decode($response->getContent(), true);
+        return json_decode($response->getBody()->getContents(), true);
     }
 }

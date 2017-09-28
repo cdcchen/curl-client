@@ -8,6 +8,8 @@
 
 namespace cdcchen\net\curl;
 
+use cdcchen\psr7\Response;
+
 
 /**
  * Class XmlParser
@@ -19,9 +21,9 @@ class XmlParser implements ParserInterface
      * @param Response $response
      * @return array
      */
-    public function parse(Response $response)
+    public function parse(Response $response): array
     {
-        return $this->convertXmlToArray($response->getContent());
+        return $this->convertXmlToArray($response->getBody()->getContents());
     }
 
     /**

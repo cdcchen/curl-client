@@ -31,9 +31,9 @@ class XmlFormatter implements FormatterInterface
      */
     public $version = '1.0';
     /**
-     * @var string the XML encoding. If not set, it will use the value of [[\yii\base\Application::charset]].
+     * @var string the XML encoding.
      */
-    public $encoding;
+    public $encoding = 'utf-8';
     /**
      * @var string the name of the root element.
      */
@@ -50,8 +50,8 @@ class XmlFormatter implements FormatterInterface
     public function format(HttpClient $client, RequestInterface $request): RequestInterface
     {
         $contentType = $this->contentType;
-        $charset = $this->encoding === 'utf-8';// ? Yii::$app->charset : $this->encoding;
-        if (stripos($contentType, 'charset') === false) {
+        $charset = strtolower($this->encoding);
+        if (stripos($contentType, 'charset') === false && $charset) {
             $contentType .= '; charset=' . $charset;
         }
         $data = $client->getData();

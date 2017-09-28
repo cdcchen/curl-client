@@ -54,13 +54,12 @@ class HttpClient extends CurlClient
             $this->addOption(CURLOPT_NOBODY, true);
         } elseif ($this->_files) {
             $this->addOption(CURLOPT_POSTFIELDS, array_merge((array)$this->_data, $this->_files));
-        } else {
-            if ($this->_data) {
-                $request = Formatter::getFormatter($this->_format)->format($this, $request);
-            }
-            if ($request->getBody()->getSize() > 0) {
-                $this->addOption(CURLOPT_POSTFIELDS, $request->getBody()->getContents());
-            }
+        }
+        if ($this->_data) {
+            $request = Formatter::getFormatter($this->_format)->format($this, $request);
+        }
+        if ($request->getBody()->getSize() > 0) {
+            $this->addOption(CURLOPT_POSTFIELDS, $request->getBody()->getContents());
         }
 
         $this->addOption(CURLOPT_HTTPHEADER, $this->getHeaderLines($request->getHeaders()));

@@ -8,6 +8,8 @@
 
 namespace cdcchen\net\curl;
 
+use cdcchen\psr7\Response;
+
 
 /**
  * Class UrlEncodedParser
@@ -18,10 +20,10 @@ class UrlEncodedParser implements ParserInterface
     /**
      * @inheritdoc
      */
-    public function parse(Response $response)
+    public function parse(Response $response): array
     {
         $data = [];
-        parse_str($response->getContent(), $data);
+        parse_str($response->getBody()->getContents(), $data);
         return $data;
     }
 }
