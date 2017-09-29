@@ -6,7 +6,7 @@
  * Time: 15:43
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 use cdcchen\psr7\StreamHelper;
 use Psr\Http\Message\RequestInterface;
@@ -14,7 +14,7 @@ use Psr\Http\Message\RequestInterface;
 
 /**
  * Class JsonFormatter
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 class JsonFormatter implements FormatterInterface
 {
@@ -31,7 +31,7 @@ class JsonFormatter implements FormatterInterface
     {
         $stream = StreamHelper::createStream(json_encode($client->getData(), $this->encodeOptions));
 
-        return $request->withHeader('Content-Type', 'application/json; charset=UTF-8')
+        return $request->withHeader('Content-Type', 'application/json; charset=utf-8')
                        ->withBody($stream);
     }
 }

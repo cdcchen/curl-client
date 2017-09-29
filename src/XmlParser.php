@@ -6,14 +6,14 @@
  * Time: 17:59
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 use cdcchen\psr7\Response;
 
 
 /**
  * Class XmlParser
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 class XmlParser implements ParserInterface
 {

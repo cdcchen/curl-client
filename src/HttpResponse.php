@@ -6,14 +6,14 @@
  * Time: 04:41
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 use cdcchen\psr7\Response;
 
 
 /**
  * Class HttpResponse
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 class HttpResponse extends Response
 {
@@ -111,10 +111,10 @@ class HttpResponse extends Response
     private function getParser()
     {
         static $defaultParsers = [
-            Formatter::FORMAT_JSON => 'cdcchen\net\curl\JsonParser',
-            Formatter::FORMAT_URLENCODED => 'cdcchen\net\curl\UrlEncodedParser',
-            Formatter::FORMAT_RAW_URLENCODED => 'cdcchen\net\curl\UrlEncodedParser',
-            Formatter::FORMAT_XML => 'cdcchen\net\curl\XmlParser',
+            Formatter::FORMAT_JSON => 'cdcchen\curl\JsonParser',
+            Formatter::FORMAT_URLENCODED => 'cdcchen\curl\UrlEncodedParser',
+            Formatter::FORMAT_RAW_URLENCODED => 'cdcchen\curl\UrlEncodedParser',
+            Formatter::FORMAT_XML => 'cdcchen\curl\XmlParser',
         ];
 
         if (!isset($defaultParsers[$this->getFormat()])) {

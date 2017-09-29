@@ -6,12 +6,12 @@
  * Time: 下午5:58
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 
 /**
  * Class Client
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 
 use cdcchen\psr7\HeaderCollection;
@@ -20,7 +20,7 @@ use cdcchen\psr7\Uri;
 
 /**
  * Trait Client
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 trait ClientTrait
 {

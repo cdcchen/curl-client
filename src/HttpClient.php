@@ -6,7 +6,7 @@
  * Time: 03:52
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 use cdcchen\psr7\HeaderCollection;
 use CURLFile;
@@ -15,7 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class HttpRequest
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 class HttpClient extends CurlClient
 {

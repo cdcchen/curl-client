@@ -6,7 +6,7 @@
  * Time: 15:18
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 
 use ArrayAccess;
@@ -16,7 +16,7 @@ use IteratorAggregate;
 
 /**
  * Class OptionCollection
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 class OptionCollection implements ArrayAccess, Countable, IteratorAggregate
 {

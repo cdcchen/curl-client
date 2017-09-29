@@ -6,7 +6,7 @@
  * Time: 17:48
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 
 use cdcchen\psr7\StreamHelper;
@@ -18,7 +18,7 @@ use SimpleXMLElement;
 
 /**
  * Class XmlFormatter
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 class XmlFormatter implements FormatterInterface
 {

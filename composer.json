@@ -36,7 +36,7 @@
   },
   "autoload": {
     "psr-4": {
-      "cdcchen\\net\\curl\\": "src/"
+      "cdcchen\\curl\\": "src/"
     }
   },
   "extra": {

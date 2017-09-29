@@ -6,14 +6,14 @@
  * Time: 17:58
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 use cdcchen\psr7\Response;
 
 
 /**
  * Interface ParserInterface
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 interface ParserInterface
 {
@@ -22,5 +22,5 @@ interface ParserInterface
      * @param Response $response HTTP response instance.
      * @return array parsed content data.
      */
-    public function parse(Response $response): array ;
+    public function parse(Response $response): array;
 }

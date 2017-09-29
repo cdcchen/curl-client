@@ -7,7 +7,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
-use cdcchen\net\curl\JsonParser;
+use cdcchen\curl\JsonParser;
 use cdcchen\psr7\Response;
 
 class JsonParserTest extends TestCase

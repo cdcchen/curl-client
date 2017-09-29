@@ -6,9 +6,9 @@
  * Time: 14:12
  */
 
-use cdcchen\net\curl\CurlClient;
+use cdcchen\curl\CurlClient;
 use PHPUnit\Framework\TestCase;
-use cdcchen\net\curl\TransferInfo;
+use cdcchen\curl\TransferInfo;
 
 class CurlClientTest extends TestCase
 {
@@ -222,7 +222,7 @@ class CurlClientTest extends TestCase
 
     public function testSendShouldThrownRequestException()
     {
-        $this->expectException(\cdcchen\net\curl\RequestException::class);
+        $this->expectException(\cdcchen\curl\RequestException::class);
         $client = new CurlClient();
         $client->send();
     }

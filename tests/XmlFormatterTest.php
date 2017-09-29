@@ -6,8 +6,8 @@
  * Time: 16:18
  */
 
-use cdcchen\net\curl\HttpClient;
-use cdcchen\net\curl\XmlFormatter;
+use cdcchen\curl\HttpClient;
+use cdcchen\curl\XmlFormatter;
 use cdcchen\psr7\Request;
 use PHPUnit\Framework\TestCase;
 

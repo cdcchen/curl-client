@@ -6,8 +6,8 @@
  * Time: 16:18
  */
 
-use cdcchen\net\curl\HttpClient;
-use cdcchen\net\curl\JsonFormatter;
+use cdcchen\curl\HttpClient;
+use cdcchen\curl\JsonFormatter;
 use cdcchen\psr7\Request;
 use PHPUnit\Framework\TestCase;
 
@@ -49,7 +49,7 @@ class JsonFormatterTest extends TestCase
      */
     public function testFormattedContentTypeIs_application_json(Request $request)
     {
-        $this->assertEquals('application/json; charset=UTF-8', $request->getHeaderLine('content-type'));
+        $this->assertEquals('application/json; charset=utf-8', $request->getHeaderLine('content-type'));
     }
 
 }

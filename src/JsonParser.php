@@ -6,14 +6,14 @@
  * Time: 18:00
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 use cdcchen\psr7\Response;
 
 
 /**
  * Class JsonParser
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 class JsonParser implements ParserInterface
 {

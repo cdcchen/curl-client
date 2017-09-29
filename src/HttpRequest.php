@@ -6,7 +6,7 @@
  * Time: 20:28
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 
 use cdcchen\psr7\Request;

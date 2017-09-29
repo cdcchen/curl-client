@@ -6,12 +6,12 @@
  * Time: 12:55
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 
 /**
  * Class RequestException
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 class RequestException extends \Exception
 {

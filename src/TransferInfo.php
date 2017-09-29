@@ -6,16 +6,12 @@
  * Time: 19:29
  */
 
-namespace cdcchen\net\curl;
+namespace cdcchen\curl;
 
 
 /**
  * Class TransferInfo
- * @package cdcchen\net\curl
- */
-/**
- * Class TransferInfo
- * @package cdcchen\net\curl
+ * @package cdcchen\curl
  */
 class TransferInfo
 {
